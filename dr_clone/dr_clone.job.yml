@@ -1,0 +1,41 @@
+resources:
+  jobs:
+    dr_deep_clone_job:
+      name: dr_deep_clone_job
+      max_concurrent_runs: 5
+
+      parameters:
+        - name: source_table
+          default: ""
+        - name: target_table
+          default: ""
+
+      email_notifications:
+        on_failure:
+          - ${var.notifications}
+
+      tasks:
+        - task_key: run_clone_task
+          job_cluster_key: dr_clone_cluster
+          spark_python_task:
+            python_file: ../dr_clone/task.py
+            parameters:
+              - "--catalog"
+              - "${var.catalog}"
+              - "--schema"
+              - "${var.schema}"
+              - "--source_table"
+              - "{{job.parameters.source_table}}"
+              - "--target_table"
+              - "{{job.parameters.target_table}}"
+
+      job_clusters:
+        - job_cluster_key: dr_clone_cluster
+          new_cluster:
+            policy_id: ${var.cluster_policy_id}
+            apply_policy_default_values: true
+            node_type_id: mgd-fleet.xlarge
+            num_workers: 1
+
+      queue:
+        enabled: true
