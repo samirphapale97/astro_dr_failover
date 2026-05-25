@@ -1,0 +1,53 @@
+# -----------------------------------------------------------------------------
+# Astro Airflow DR Failover — Example Variable Values
+# Copy this file to terraform.tfvars and fill in your actual values.
+# NEVER commit terraform.tfvars with real secrets to version control.
+# -----------------------------------------------------------------------------
+
+project     = "airflow-dr"
+environment = "prod"
+
+primary_region = "us-east-1"
+dr_region      = "us-east-2"
+
+# Airflow configuration secrets for primary region
+primary_config = {
+  databricks_url    = "https://your-primary-workspace.cloud.databricks.com"
+  s3_bucket         = "your-primary-data-bucket"
+  kafka_bootstrap   = "kafka-primary.example.com:9092"
+  database_host     = "primary-db.cluster-abc123.us-east-1.rds.amazonaws.com"
+}
+
+# Airflow configuration secrets for DR region
+dr_config = {
+  databricks_url    = "https://your-dr-workspace.cloud.databricks.com"
+  s3_bucket         = "your-dr-data-bucket"
+  kafka_bootstrap   = "kafka-dr.example.com:9092"
+  database_host     = "dr-db.cluster-xyz789.us-east-2.rds.amazonaws.com"
+}
+
+# Route53 Health Check — monitors this FQDN to detect primary region failures
+health_check_fqdn = "your-primary-workspace.cloud.databricks.com"
+health_check_port = 443
+health_check_path = "/api/2.0/clusters/list"
+health_check_type = "HTTPS"
+
+# Slack webhook for failover notifications
+slack_webhook_url = "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+
+# Astronomer (Astro) integration — optional
+astro_api_key       = ""
+astro_deployment_id = ""
+
+# Email for SNS failover alerts — leave empty to skip
+notification_email = "oncall-team@example.com"
+
+# KMS & Secrets Manager settings
+kms_deletion_window    = 10
+secret_recovery_window = 7
+
+# Additional tags
+tags = {
+  Team      = "data-engineering"
+  CostCenter = "airflow-platform"
+}
