@@ -33,7 +33,7 @@ health_check_path = "/api/2.0/clusters/list"
 health_check_type = "HTTPS"
 
 # Slack webhook for failover notifications
-slack_webhook_url = "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+slack_webhook_url = "https://hooks.slack.com/"
 
 # Astronomer (Astro) integration — optional
 astro_api_key       = ""
